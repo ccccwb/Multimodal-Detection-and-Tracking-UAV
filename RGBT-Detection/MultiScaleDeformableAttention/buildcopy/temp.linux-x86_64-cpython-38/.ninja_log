@@ -1,0 +1,4 @@
+# ninja log v5
+1	2764	1667630091136616876	/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/build/temp.linux-x86_64-cpython-38/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/src/cpu/ms_deform_attn_cpu.o	dda35d351eb537c0
+1	10013	1667630098380592172	/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/build/temp.linux-x86_64-cpython-38/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/src/cuda/ms_deform_attn_cuda.o	b972d858ddcb711e
+1	18114	1667630106476564719	/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/build/temp.linux-x86_64-cpython-38/media/data3/caiwb/RGBTDetection/MultiScaleDeformableAttention/src/vision.o	97147a3799c0f9be
