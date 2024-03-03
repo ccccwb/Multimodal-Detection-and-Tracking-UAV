@@ -1,0 +1,231 @@
+{
+  "version": {
+    "major": 1,
+    "minor": 0
+  },
+  "main_interface": {
+    "floating_window": {
+      "is_enable": true
+    },
+    "speaker": {
+      "is_enable_tts": true,
+      "is_enable_voice": true
+    },
+    "widget_list": [
+      {
+        "widget_index": 0,
+        "widget_type": "button",
+        "widget_name": "Button",
+        "icon_file_set": {
+          "icon_file_name_selected": "icon_button1.png",
+          "icon_file_name_unselected": "icon_button1.png"
+        },
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 0
+        }
+      },
+      {
+        "widget_index": 1,
+        "widget_type": "list",
+        "widget_name": "List",
+        "list_item": [
+          {
+            "item_name": "Item_1",
+            "icon_file_set": {
+              "icon_file_name_selected": "icon_list_item1.png",
+              "icon_file_name_unselected": "icon_list_item1.png"
+            }
+          },
+          {
+            "item_name": "Item_2",
+            "icon_file_set": {
+              "icon_file_name_selected": "icon_list_item2.png",
+              "icon_file_name_unselected": "icon_list_item2.png"
+            }
+          }
+        ],
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 1
+        }
+      },
+      {
+        "widget_index": 2,
+        "widget_type": "switch",
+        "widget_name": "Switch",
+        "icon_file_set": {
+          "icon_file_name_selected": "icon_switch_select.png",
+          "icon_file_name_unselected": "icon_switch_unselect.png"
+        },
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 2
+        }
+      },
+      {
+        "widget_index": 3,
+        "widget_type": "scale",
+        "widget_name": "Scale",
+        "icon_file_set": {
+          "icon_file_name_selected": "icon_scale.png",
+          "icon_file_name_unselected": "icon_scale.png"
+        },
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 3
+        }
+      }
+    ]
+  },
+  "config_interface": {
+    "text_input_box": {
+      "widget_name": "TextInputBox",
+      "placeholder_text": "Please input message",
+      "is_enable": true
+    },
+    "widget_list": [
+      {
+        "widget_index": 4,
+        "widget_type": "button",
+        "widget_name": "Button 4",
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 4
+        }
+      },
+      {
+        "widget_index": 5,
+        "widget_type": "scale",
+        "widget_name": "Scale 5",
+        "customize_rc_buttons_config": {
+          "is_enable": true,
+          "mapping_config_display_order": 5
+        }
+      },
+      {
+        "widget_index": 6,
+        "widget_type": "int_input_box",
+        "widget_name": "Integer Input Box 6",
+        "int_input_box_hint": "unit:s"
+      },
+      {
+        "widget_index": 7,
+        "widget_type": "switch",
+        "widget_name": "Unlock flight control restrictions (Special attention)"
+      },
+      {
+        "widget_index": 8,
+        "widget_type": "list",
+        "widget_name": "Please Select Payload Index",
+        "list_item": [
+          {
+            "item_name": "payload_index1"
+          },
+          {
+            "item_name": "payload_index2"
+          },
+          {
+            "item_name": "payload_index3"
+          }
+        ]
+      },
+      {
+        "widget_index": 9,
+        "widget_type": "list",
+        "widget_name": "Please Select Sample",
+        "list_item": [
+          {
+            "item_name": "01_test_fc_subscription"
+          },
+          {
+            "item_name": "02_test_waypoint_v2"
+          },
+          {
+            "item_name": "03_test_waypoint_v3"
+          },
+          {
+            "item_name": "04_test_flight_ctrl_takeoff_landing"
+          },
+          {
+            "item_name": "05_test_flight_ctrl_position_ctrl"
+          },
+          {
+            "item_name": "06_test_flight_ctrl_force_landing"
+          },
+          {
+            "item_name": "07_test_flight_ctrl_velocity_ctrl"
+          },
+          {
+            "item_name": "08_test_flight_ctrl_arrest_flying"
+          },
+          {
+            "item_name": "09_test_flight_ctrl_set_get_param"
+          },
+          {
+            "item_name": "10_test_hms_info"
+          },
+          {
+            "item_name": "11_gimbal_manager_free_mode"
+          },
+          {
+            "item_name": "12_gimbal_manager_yaw_follow_mode"
+          },
+          {
+            "item_name": "13_test_liveview"
+          },
+          {
+            "item_name": "14_test_perception"
+          },
+          {
+            "item_name": "15_test_set_payload_alias"
+          },
+          {
+            "item_name": "16_test_cammgr-set/get_shutter_speed"
+          },
+          {
+            "item_name": "17_test_cammgr-set/get_aperture"
+          },
+          {
+            "item_name": "18_test_cammgr-set/get_ev"
+          },
+          {
+            "item_name": "19_test_cammgr-set/get_iso"
+          },
+          {
+            "item_name": "20_test_cammgr-focus_point"
+          },
+          {
+            "item_name": "21_test_cammgr-tap_zoom"
+          },
+          {
+            "item_name": "22_test_cammgr-optical_zoom"
+          },
+          {
+            "item_name": "23_test_cammgr-single_photo"
+          },
+          {
+            "item_name": "24_test_cammgr-AEB_photo"
+          },
+          {
+            "item_name": "25_test_cammgr-burst_photo"
+          },
+          {
+            "item_name": "26_test_cammgr-interval_photo"
+          },
+          {
+            "item_name": "27_test_cammgr-recorder_video"
+          },
+          {
+            "item_name": "28_test_cammgr-media_download"
+          }
+        ]
+      },
+      {
+        "widget_index": 10,
+        "widget_type": "button",
+        "widget_name": "Run"
+      }
+    ]
+  }
+}

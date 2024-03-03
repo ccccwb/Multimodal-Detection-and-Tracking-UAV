@@ -1,0 +1,150 @@
+cmake_minimum_required(VERSION 3.5)
+project(610_NX CXX)
+enable_language(CUDA)
+
+set(CMAKE_C_FLAGS "-pthread -std=gnu99")
+set(CMAKE_EXE_LINKER_FLAGS "-pthread")
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
+add_definitions(-D_GNU_SOURCE)
+
+set(COMMON_CXX_FLAGS "-std=c++11 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_CXX_FLAGS} -fprofile-arcs -ftest-coverage -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -lgcov")
+
+# include_directories(../../../module_sample)
+# include_directories(../../../../sample_c/module_sample)
+
+
+include_directories(../common .)
+# find_package(catkin)
+# include_directories(${catkin_INCLUDE_DIRS})
+# message(STATUS " - Librarie-------------------------------------------------s: ${catkin_INCLUDE_DIRS}")
+include_directories(./algorithm/kcf_sot ./algorithm/yolo_sot)#让算法文件夹下的头文件能访问同目录下的文件夹里的文件QAQ
+# include_directories(./camera_control/pid_control)#包含pid算法
+
+# file(GLOB_RECURSE MODULE_SAMPLE_SRC
+#         ../../../module_sample/liveview/*.c*
+#         ../../../module_sample/perception/*.c*
+#         ../../../../sample_c/module_sample/*.c
+#         )
+
+file(GLOB_RECURSE MODULE_COMMON_SRC ../common/*.c*)
+file(GLOB_RECURSE MODULE_HAL_SRC hal/*.c*)
+file(GLOB_RECURSE MODULE_APP_SRC application/*.c*)
+file(GLOB_RECURSE MODULE_MOP_SRC mop/*.c*) #which is using for data transmission
+file(GLOB_RECURSE MODULE_LIVEVIEW_SRC liveview/*.c*) #which is using for get RGBT image(video) data
+file(GLOB_RECURSE MODULE_MANAGER_SRC manager/*.c*)
+file(GLOB_RECURSE MODULE_ALGORITHM_SRC algorithm/*.c algorithm/*.cpp algorithm/*.cu)
+file(GLOB_RECURSE MODULE_UTILS_SRC utils/*.c*)
+file(GLOB_RECURSE MODULE_CAMERA_CONTROL_SRC camera_control/*.c*)
+file(GLOB_RECURSE MODULE_POSITION_COMPUTE_SRC position_compute/*.c*)
+
+execute_process(COMMAND uname -m
+        OUTPUT_VARIABLE DEVICE_SYSTEM_ID)
+if (DEVICE_SYSTEM_ID MATCHES x86_64)
+    set(TOOLCHAIN_NAME x86_64-linux-gnu-gcc)
+    add_definitions(-DPLATFORM_ARCH_x86_64=1)
+elseif (DEVICE_SYSTEM_ID MATCHES aarch64)
+    set(TOOLCHAIN_NAME aarch64-linux-gnu-gcc)
+    add_definitions(-DPLATFORM_ARCH_aarch64=1)
+else ()
+    message(FATAL_ERROR "FATAL: Please confirm your platform.")
+endif ()
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../common/3rdparty)
+
+link_directories(${CMAKE_CURRENT_LIST_DIR}/../../../../../psdk_lib/lib/${TOOLCHAIN_NAME})
+link_libraries(${CMAKE_CURRENT_LIST_DIR}/../../../../../psdk_lib/lib/${TOOLCHAIN_NAME}/libpayloadsdk.a -lstdc++)
+
+add_executable(${PROJECT_NAME}
+        ${MODULE_APP_SRC}
+        # ${MODULE_SAMPLE_SRC}
+        ${MODULE_COMMON_SRC}
+        ${MODULE_HAL_SRC}
+        ${MODULE_MOP_SRC}
+        ${MODULE_MANAGER_SRC}
+        ${MODULE_LIVEVIEW_SRC}
+        ${MODULE_ALGORITHM_SRC}
+        ${MODULE_UTILS_SRC}
+        ${MODULE_CAMERA_CONTROL_SRC}
+        ${MODULE_POSITION_COMPUTE_SRC}
+        )
+
+#YOLO tensorrt的设置
+find_package(CUDA REQUIRED)#要用到cuda
+target_include_directories(${PROJECT_NAME} PRIVATE ${CUDA_TOOLKIT_ROOT_DIR}/include)
+target_link_libraries(${PROJECT_NAME} nvinfer nvinfer_plugin nvparsers "stdc++fs")
+
+
+# Try to see if user has OpenCV installed因为额
+# if yes, default callback will display the image
+find_package(OpenCV QUIET)
+if (OpenCV_FOUND)
+    message("\n${PROJECT_NAME}...")
+    message(STATUS "Found OpenCV installed in the system, will use it to display image in AdvancedSensing APIs")
+    message(STATUS " - Includes: ${OpenCV_INCLUDE_DIRS}")
+    message(STATUS " - Libraries: ${OpenCV_LIBRARIES}")
+    add_definitions(-DOPEN_CV_INSTALLED)
+else ()
+    message(STATUS "Did not find OpenCV in the system, image data is inside RecvContainer as raw data")
+endif ()
+
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../../../../../psdk_lib/include)
+
+find_package(OPUS REQUIRED)
+if (OPUS_FOUND)
+    message(STATUS "Found OPUS installed in the system")
+    message(STATUS " - Includes: ${OPUS_INCLUDE_DIR}")
+    message(STATUS " - Libraries: ${OPUS_LIBRARY}")
+
+    add_definitions(-DOPUS_INSTALLED)
+    target_link_libraries(${PROJECT_NAME} /usr/local/lib/libopus.a)
+else ()
+    message(STATUS "Cannot Find OPUS")
+endif (OPUS_FOUND)
+
+find_package(LIBUSB REQUIRED)
+if (LIBUSB_FOUND)
+    message(STATUS "Found LIBUSB installed in the system")
+    message(STATUS " - Includes: ${LIBUSB_INCLUDE_DIR}")
+    message(STATUS " - Libraries: ${LIBUSB_LIBRARY}")
+
+    add_definitions(-DLIBUSB_INSTALLED)
+    target_link_libraries(${PROJECT_NAME} usb-1.0)
+else ()
+    message(STATUS "Cannot Find LIBUSB")
+endif (LIBUSB_FOUND)
+
+if (NOT EXECUTABLE_OUTPUT_PATH)
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+endif ()
+
+find_package(FFMPEG REQUIRED)
+if (FFMPEG_FOUND)
+    # 实在不知道怎么用
+    # list(APPEND FFMPEG_LIBRARIES /usr/local/lib/libnvmpi.so)
+    # list(APPEND FFMPEG_INCLUDE_DIR /usr/local/include)
+    message(STATUS "Found FFMPEG installed in the system")
+    message(STATUS " - Includes: ${FFMPEG_INCLUDE_DIR}")
+    message(STATUS " - Libraries: ${FFMPEG_LIBRARIES}")
+    target_link_libraries(${PROJECT_NAME} ${FFMPEG_LIBRARIES})
+else ()
+    message(STATUS "Cannot Find FFMPEG")
+endif (FFMPEG_FOUND)
+
+include_directories(${FFMPEG_INCLUDE_DIR})
+
+target_link_libraries(${PROJECT_NAME} m)
+
+add_custom_command(TARGET ${PROJECT_NAME}
+        PRE_LINK COMMAND cmake ..
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
+if (OpenCV_FOUND)
+    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+endif ()
+
